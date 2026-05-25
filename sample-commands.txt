@@ -1,0 +1,16 @@
+# Build the Dockerfile
+podman build -t php-api-demo .
+
+# Run the Container:
+podman run --detach --name my-api-demo-instance --publish 60080:80 --log-driver=journald php-api-demo
+# You must use the same name of the container in both commands
+
+# Stop the Container:
+podman stop my-api-demo-instance; podman rm my-api-demo-instance
+
+# Enter a running container:
+podman exec -it my-api-demo-instance bash
+
+# Copy files out of a container:
+podman cp my-api-demo-instance:/var/www/html/make-access-token.php html/make-access-token.php 
+podman cp my-api-demo-instance:/var/www/html/api/index.php html/api/index.php
