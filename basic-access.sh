@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Check for existence of API key file:
+if [ ! -f "./api-key.txt" ]; then
+	echo "api-key.txt doesn't exist or is unreadable."
+	echo "Make sure your API key is in this file."
+	exit 1
+fi
+
 # Copy-Paste your API Key below:
 #API_KEY=Test
 API_KEY=$(cat api-key.txt)
