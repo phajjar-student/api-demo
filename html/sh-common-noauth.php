@@ -15,6 +15,8 @@ define ('HASH_ALGO', 'sha512');
 define ('SALT_SIZE', 64);
 define ('KEY_LENGTH', 64);
 
+define ('MAX_QUOTE_LENGTH', 500);
+
 function TableExists(PDO $pdo, string $table): bool
 {
     $stmt = $pdo->prepare("

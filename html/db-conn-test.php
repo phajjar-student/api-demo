@@ -27,6 +27,19 @@ try
 		// The line below makes errors manifest as exceptions.
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		print "<h3>Connected to the database successfully.</h3>";
+		$tables = "";
+		foreach ($conn->query("select name from sqlite_schema where type='table' and name not like '%sqlite_%';") as $row)
+		{
+			$tables .= "<li>" .$row['name'] . "</li>";
+		}
+		if ("" == $tables)
+		{
+			print "<h3>No Tables</h3>";
+		}
+		else
+		{
+			print "<h3>Tables</h3><ul>" .$tables . "</ul>";
+		}
 		// Note that with PDO there is no need to explicitly close a connection.
 	}
 catch (Exception $ex)

@@ -43,7 +43,11 @@ COPY html/api/* /var/www/html/api
 # This is also the directory you land in when you jump into a running container.
 WORKDIR /var/www/html
 
-COPY html/* .
+COPY html/db-conn-test.php .
+COPY html/index.php .
+COPY html/make-access-token.php .
+COPY html/phpinfo.php .
+COPY html/sh-common-noauth.php .
 # The below command will recurisvely change ownership for everything in webroot, including the api directory.
 RUN chown -R www-data:www-data /var/www/html
 

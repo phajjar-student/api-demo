@@ -32,7 +32,7 @@ foreach ($headers as $header => $value)
 // Raw request body (POST / PUT / PATCH / DELETE)
 $rawBody = file_get_contents('php://input');
 
-define ('ALLOWED_PATHS', 'VALIDATE|HELP');
+define ('ALLOWED_PATHS', 'VALIDATE|HELP|QUOTES');
 
 // Open a connection to the database.  This is the only way we will talk to the database from outside of this container.
 try
@@ -118,6 +118,11 @@ function ProcessMethod ($conn, $method, $authHeader, $path, $rawBody, $reporting
 					$response = new Help();
 					$response->Go();
 					break;
+				case "quotes" :
+					require "quotes.php";
+					$response = new Quotes();
+					$response->Go($conn, $method);
+					break;
 				}
 			}
 			else
@@ -180,7 +185,7 @@ class Help extends OutputJSON
 			if (0 == $x)
 				$helpMessage .= $allowedPathParts[$x];
 			elseif (count($allowedPathParts)-1 == $x)
-				$helpMessage .= " or " . $allowedPathParts[$x];
+				$helpMessage .= ", or " . $allowedPathParts[$x];
 			else
 				$helpMessage .= ", " . $allowedPathParts[$x];
 		}
