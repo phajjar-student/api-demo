@@ -121,7 +121,7 @@ function ProcessMethod ($conn, $method, $authHeader, $path, $rawBody, $reporting
 				case "quotes" :
 					require "quotes.php";
 					$response = new Quotes();
-					$response->Go($conn, $method);
+					$response->Go($conn, $method, MAX_QUOTE_LENGTH);
 					break;
 				}
 			}

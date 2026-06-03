@@ -82,12 +82,22 @@ class Quotes extends OutputJSON
 
 		try
 		{
-			$sql1 = $this->conn->prepare("insert into tbl_quotes (quote_text, quote_author, quote_year) values (:quote_text, :quote_author, :quote_year);");
-			$sql1->execute([":quote_text" => $quoteText, ":quote_author" => $quoteAuthor, ":quote_year" => $quoteYear]);
+			// Is the quote already in the database?  If yes throw an exception.
+			$sql2 = $this->conn->prepare("select count(*) as 'recordCount' from " .
+				"tbl_quotes where lower(quote_text)=lower(:possible_quote_text);");
+			$sql2->execute([":possible_quote_text" => $quoteText]);
+			$recordCount = (int) $sql2->fetchColumn();
+			if (0 == $recordCount)
+			{
+				$sql1 = $this->conn->prepare("insert into tbl_quotes (quote_text, quote_author, quote_year) values (:quote_text, :quote_author, :quote_year);");
+				$sql1->execute([":quote_text" => $quoteText, ":quote_author" => $quoteAuthor, ":quote_year" => $quoteYear]);
 
-			$insertID = $this->conn->lastInsertId();
-			$this->InitIfNeeded (200, array ("message" => "Success", "id", $insertID));
-			$this->OutJSON();
+				$insertID = $this->conn->lastInsertId();
+				$this->InitIfNeeded (200, array ("message" => "Success", "id", $insertID));
+				$this->OutJSON();
+			}
+			else
+				throw new Exception ("Quote is already in the database.");
 		}
 		catch (Exception $ex)
 		{
