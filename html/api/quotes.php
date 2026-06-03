@@ -41,7 +41,6 @@ class Quotes extends OutputJSON
 					$this->DeliverErrorMessageWithHTTPCode ($ex->getMessage());
 				}
 				break;
-				/*
 			case "GET" :
 				try
 				{
@@ -49,7 +48,9 @@ class Quotes extends OutputJSON
 				}
 				catch (Exception $ex)
 				{
-				}*/
+					$this->DeliverErrorMessageWithHTTPCode ($ex->getMessage());
+				}
+				break;
 			default:
 				$this->InitIfNeeded (405, array("message" => "Method [" . $this->method . "] is not supported in Quotes."));
 				$this->OutJSON();
@@ -111,6 +112,37 @@ class Quotes extends OutputJSON
 			throw new Exception ("500|Failed due to error [" . $ex->getMessage() . "]");
 		}
 
+	}
+
+	function GetQuote ()
+	{
+		// If no id is specified, just grab a random quote from the table.
+		$id = -1;
+		if (isset ($_GET["id"]))
+		{
+			// Is this a non-negative integer?
+			if (!is_int($_GET["id"]))
+				throw new Exception ("400|If an id is specified it must be a " .
+					"non-negative integer.");
+			$possibleId = (int) $_GET["id"];
+			if ($possibleId < 1)
+				throw new Exception ("400|An integer id was specified but it " .
+					"was non-negative.");
+			$id = $possibleId;
+		}
+		$fetchedQuote = "";
+		$fetchedAuthor = "";
+		if (-1 == $id)
+		{
+			$sql0 = $this->conn->query("select * from tbl_quotes order by " .
+				"random() limit 1;");
+			$rowCount = $sql0->fetchColumn();
+			if ($rowCount < 1)
+				throw new Exception ("500|There are no quotes in the database.");
+			$row0 = $sql0->fetch();
+			$fetchedQuote = $row0["quote_text"];
+			$fetchedAuthor = $row0["quote_author"];
+		}
 	}
 }
 

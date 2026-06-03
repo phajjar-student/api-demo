@@ -35,9 +35,28 @@ OUTPUT=`curl -v -d 'quote_author=Nobody&quote_text=Lorem%20ipsum%20dolor%20sit%2
     --header "Authorization: Bearer $API_KEY"`
 printf "\nPOST Method - Output is:\n$OUTPUT\n\n"
 
+# Specific Quote
 printf "GET:\n"
- Add the -v argument after curl to be verbose.
-OUTPUT=`curl -d 'key1=val1&key2=val2&key3=val3' --request GET \
+OUTPUT=`curl -v -G -d 'id=1' --request GET --url "$URL/$ACTION" \
+    --header "aUthorization: Bearer $API_KEY"`
+printf "\nGET Method - Output is:\n$OUTPUT\n\n"
+
+# Non-integer ID
+printf "GET:\n"
+OUTPUT=`curl -v -G -d 'id=abc' --request GET --url "$URL/$ACTION" \
+    --header "aUthorization: Bearer $API_KEY"`
+printf "\nGET Method - Output is:\n$OUTPUT\n\n"
+
+# Non-non-negative ID
+printf "GET:\n"
+OUTPUT=`curl -v -G -d 'id=0' --request GET --url "$URL/$ACTION" \
+    --header "aUthorization: Bearer $API_KEY"`
+printf "\nGET Method - Output is:\n$OUTPUT\n\n"
+
+# Random Quote
+printf "GET:\n"
+# Add the -v argument after curl to be verbose.
+OUTPUT=`curl -v --request GET \
     --url "$URL/$ACTION" \
     --header "Authorization: Bearer $API_KEY"`
 printf "\nGET Method - Output is:\n$OUTPUT\n\n"
