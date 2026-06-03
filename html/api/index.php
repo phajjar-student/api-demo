@@ -151,6 +151,20 @@ class OutputJSON
 			$this->InitIfNeeded ($inOutStatus, $inResponseComponents);
 	}
 
+	function DeliverErrorMessageWithHTTPCode ($inMessage)
+	{
+		// For use with error messages that include an HTTP code, a bar, and a message.
+		$code = 500;
+		if (str_contains ($inMessage, "|"))
+		{
+			$messageParts = explode ("|", $inMessage);
+			$this->InitIfNeeded ((int)$messageParts[0], array("message" =>
+				"Request failed due to error [" . $messageParts[1] . "]"));
+			$this->OutJSON();
+		}
+
+	}
+
 	function InitIfNeeded ($inOutStatus, $inResponseComponents)
 	{
 		$this->outStatus = $inOutStatus;

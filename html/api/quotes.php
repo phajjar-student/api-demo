@@ -38,11 +38,18 @@ class Quotes extends OutputJSON
 				}
 				catch (Exception $ex)
 				{
-					$messageParts = explode ("|", $ex->getMessage());
-					$this->InitIfNeeded ((int)$messageParts[0], array("message" => "Request failed due to error [" . $messageParts[1] . "]"));
-					$this->OutJSON();
+					$this->DeliverErrorMessageWithHTTPCode ($ex->getMessage());
 				}
 				break;
+				/*
+			case "GET" :
+				try
+				{
+					$this->GetQuote();
+				}
+				catch (Exception $ex)
+				{
+				}*/
 			default:
 				$this->InitIfNeeded (405, array("message" => "Method [" . $this->method . "] is not supported in Quotes."));
 				$this->OutJSON();
