@@ -28,6 +28,13 @@ OUTPUT=`curl -v -d 'quote_text=I%20hated%20every%20minute%20of%20training%2C%20b
     --header "Authorization: Bearer $API_KEY"`
 printf "\nPOST Method - Output is:\n$OUTPUT\n\n"
 
+# Too long of a quote.
+printf "POST:\n"
+OUTPUT=`curl -v -d 'quote_author=Nobody&quote_text=Lorem%20ipsum%20dolor%20sit%20amet%2C%20consectetur%20adipiscing%20elit.%20Donec%20ac%20ornare%20ante.%20Aliquam%20pellentesque%20eros%20id%20urna%20posuere%20ultricies.%20Nullam%20condimentum%20efficitur%20sollicitudin.%20Mauris%20pulvinar%20rutrum%20nibh%2C%20in%20dignissim%20enim%20euismod%20eget.%20Donec%20sed%20risus%20in%20orci%20vehicula%20suscipit%20non%20faucibus%20enim.%20Mauris%20vel%20malesuada%20enim%2C%20quis%20molestie%20massa.%20Nam%20odio%20enim%2C%20facilisis%20et%20auctor%20vitae%2C%20egestas%20at%20neque.%20Etiam%20vel%20nibh%20convallis%2C%20efficitur%20arcu%20nec%2C%20convallis%20metus.%20Fusce%20sem%20sapien%2C%20fermentum%20quis%20faucibus%20sit%20amet%2C%20tempor%20et%20mauris.%0A%0AIn%20maximus%20fermentum%20nisl%2C%20consectetur%20fringilla%20neque%20ultrices%20eget.%20Fusce%20in%20justo%20eu%20nisl%20consectetur%20posuere.%20Morbi%20iaculis%20auctor%20diam%2C%20ac%20semper%20sem%20porta%20et.%20Etiam%20eu%20quam%20nec%20metus%20tincidunt%20posuere.%20Sed%20fermentum%20luctus%20posuere.%20Sed%20ut%20enim%20at%20orci%20luctus%20feugiat%20vel%20et%20turpis.%20Aenean%20vel%20aliquam%20lectus.%20Fusce%20quis%20justo%20id%20lectus%20pharetra%20facilisis%20non%20sed%20ex.%20Sed%20viverra%20fringilla%20arcu%2C%20ut%20commodo%20eros.%20Etiam%20quis%20molestie%20neque.%20Donec%20non%20aliquam.' --request POST \
+    --url "$URL/$ACTION" \
+    --header "Authorization: Bearer $API_KEY"`
+printf "\nPOST Method - Output is:\n$OUTPUT\n\n"
+
 printf "GET:\n"
  Add the -v argument after curl to be verbose.
 OUTPUT=`curl -d 'key1=val1&key2=val2&key3=val3' --request GET \
