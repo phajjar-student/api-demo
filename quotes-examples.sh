@@ -16,18 +16,24 @@ URL=http://my-api-demo:60080/api
 # Applies to quotes only:
 ACTION=Quotes
 
-#printf "GET:\n"
-# Add the -v argument after curl to be verbose.
-#OUTPUT=`curl -d 'key1=val1&key2=val2&key3=val3' --request GET \
-#    --url "$URL/$ACTION" \
-#    --header "Authorization: Bearer $API_KEY"`
-#printf "\nGET Method - Output is:\n$OUTPUT\n\n"
-
 printf "POST:\n"
 OUTPUT=`curl -v -d 'quote_text=Diplomacy%20is%20the%20art%20of%20saying%20%27Nice%20doggie%27%20until%20you%20can%20find%20a%20rock.&quote_author=Will%20Rogers' --request POST \
     --url "$URL/$ACTION" \
     --header "authorization: Bearer $API_KEY"`
 printf "\nPOST Method - Output is:\n$OUTPUT\n\n"
+
+printf "POST:\n"
+OUTPUT=`curl -v -d 'quote_text=I%20hated%20every%20minute%20of%20training%2C%20but%20I%20said%2C%20%27Don%27t%20quit.%20Suffer%20now%20and%20live%20the%20rest%20of%20your%20life%20as%20a%20champion%27.&quote_author=Muhammad%20Ali' --request POST \
+    --url "$URL/$ACTION" \
+    --header "Authorization: Bearer $API_KEY"`
+printf "\nPOST Method - Output is:\n$OUTPUT\n\n"
+
+printf "GET:\n"
+ Add the -v argument after curl to be verbose.
+OUTPUT=`curl -d 'key1=val1&key2=val2&key3=val3' --request GET \
+    --url "$URL/$ACTION" \
+    --header "Authorization: Bearer $API_KEY"`
+printf "\nGET Method - Output is:\n$OUTPUT\n\n"
 
 #printf "PUT:\n"
 #OUTPUT=`curl -d 'key1=val1&key2=val2&key3=val3' --request PUT \
