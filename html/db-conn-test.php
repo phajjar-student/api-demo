@@ -47,6 +47,7 @@ catch (Exception $ex)
 		print "<h3 class='error'>Connection failed due to error [" . $ex->getMessage() . "]</h3>";
 	}
 ?>
+<p><a href='db-conn-test.php'>Refresh</a></p>
 </main>
 </body>
 </html>
