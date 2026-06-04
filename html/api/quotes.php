@@ -31,6 +31,7 @@ class Quotes extends OutputJSON
 
 		switch ($this->method)
 		{
+			// Create a new quote record..
 			case "POST" :
 				try
 				{
@@ -41,10 +42,33 @@ class Quotes extends OutputJSON
 					$this->DeliverErrorMessageWithHTTPCode ($ex->getMessage());
 				}
 				break;
+			// Read a quote record.
 			case "GET" :
 				try
 				{
 					$this->GetQuote();
+				}
+				catch (Exception $ex)
+				{
+					$this->DeliverErrorMessageWithHTTPCode ($ex->getMessage());
+				}
+				break;
+			// Update selected parts of a quote record.
+			case "PATCH" :
+				try
+				{
+					$this->UpdateQuote();
+				}
+				catch (Exception $ex)
+				{
+					$this->DeliverErrorMessageWithHTTPCode ($ex->getMessage());
+				}
+				break;
+			// Delete the quote record.
+			case "DELETE" : 
+				try
+				{
+					$this->DeleteQuote();
 				}
 				catch (Exception $ex)
 				{
@@ -114,13 +138,13 @@ class Quotes extends OutputJSON
 
 	}
 
-	function GetQuote ()
+	function ReturnIDIfPossible()
 	{
-		// If no id is specified, just grab a random quote from the table.
+		// We just check the id if one was presented.  If not, return -1.
+		// It is up to the calling function to decide if that's good or not.
 		$id = -1;
 		if (isset ($_GET["id"]))
 		{
-			
 			// Is this a non-negative integer?
 			if (!$this->IsInteger($_GET["id"]))
 				throw new Exception ("400|If an id is specified it must be a " .
@@ -130,8 +154,63 @@ class Quotes extends OutputJSON
 				throw new Exception ("400|An integer id was specified but it " .
 					"was non-negative.");
 			$id = $possibleId;
-			
 		}
+		return $id;
+	}
+
+	function DeleteQuote ()
+	{
+		// In this situation, we need an ID.
+		$id = $this->ReturnIDIfPossible();
+		if (-1 == $id)
+		{
+			throw new Exception ("400|A record ID must be specified in order to perform a delete.");
+		}
+	}
+
+	function UpdateQuote ()
+	{
+		// In this situation, we need an ID.
+		$id = $this->ReturnIDIfPossible();
+		if (-1 == $id)
+		{
+			throw new Exception ("400|A record ID must be specified in order to perform an update.");
+		}
+		if (!$this->RecordExists($id))
+			throw new Exception ("400|No quote with that ID exists.");
+		// Update based on values specified.
+		$sql3 = "";
+		$whatWasUpdated = "";
+		if (isset ($_GET["quote_text"]))
+		{
+			// Is the quote too long?
+			if (strlen ($_GET["quote_text"]) > $this->maxQuoteLength)
+				throw new Exception ("431|Replacement quote is too long.");
+			// The more complex this table gets, the more likely you should have to create a stored procedure
+			// or build the query into a single statement.
+			$sql3 = $this->conn->prepare("update tbl_quotes set quote_text=:inQuoteText where rcdid=:inRcdid;");
+			$sql3->execute([":inQuoteText" => $_GET["quote_text"], ":inRcdid" => $id]);
+			$whatWasUpdated = "quote text";
+		}
+
+		if (isset ($_GET["quote_author"]))
+		{
+			$sql4 = $this->conn->prepare("update tbl_quotes set quote_author=:inQuoteAuthor where rcdid=:inRcdid;");
+			$sql4->execute([":inQuoteAuthor" => $_GET["quote_author"], ":inRcdid" => $id]);
+			if ("" == $whatWasUpdated)
+				$whatWasUpdated = "quote author";
+			else
+				$whatWasUpdated .= " and quote author";
+		}
+
+		$this->InitIfNeeded(200, array ("message" => "Successfully updated " . $whatWasUpdated, "id" => $id));
+		$this->OutJSON();
+	}
+
+	function GetQuote ()
+	{
+		// If no id is specified, just grab a random quote from the table.
+		$id = $this->ReturnIDIfPossible();
 		$fetchedQuote = "";
 		$fetchedAuthor = "";
 		$fetchedID = -1;
@@ -163,16 +242,7 @@ class Quotes extends OutputJSON
 		{
 			try
 			{
-				// SQLite will return a false value for the query object if the index doesn't
-				// exist.  For now, I will count the number of records with the matching index
-				// to see if its here.  Normally I wouldn't need to do this, but I can't do a
-				// rowcount on a valid object without nulling out the retrieved data.
-
-				$sql2 = $this->conn->prepare("select count(*) as 'recordCount' from tbl_quotes where rcdid=:inRcdid");
-				$sql2->execute([":inRcdid" => $id]);
-				$row2 = $sql2->fetch();
-				$recordCount = (int)$row2["recordCount"];
-				if (0 == $recordCount)
+				if (!$this->RecordExists($id))
 					throw new Exception ("No quote with that id exists.");
 
 				$sql1 = $this->conn->prepare("select * from tbl_quotes where rcdid=:inRcdid");
@@ -191,6 +261,22 @@ class Quotes extends OutputJSON
 				throw new Exception ("500|Specific index GET failed due to error [" . $ex->getMessage() . "]");
 			}
 		}
+	}
+
+	function RecordExists ($possibleID)
+	{
+		// SQLite will return a false value for the query object if the index doesn't
+		// exist.  For now, I will count the number of records with the matching index
+		// to see if its here.  Normally I wouldn't need to do this, but I can't do a
+		// rowcount on a valid object without nulling out the retrieved data.
+
+		$sql2 = $this->conn->prepare("select count(*) as 'recordCount' from tbl_quotes where rcdid=:inRcdid");
+		$sql2->execute([":inRcdid" => $possibleID]);
+		$row2 = $sql2->fetch();
+		$recordCount = (int)$row2["recordCount"];
+		if ($recordCount > 0)
+			return true;
+		return false;
 	}
 }
 

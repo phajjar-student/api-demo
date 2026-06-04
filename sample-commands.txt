@@ -14,6 +14,9 @@ podman exec -it my-api-demo-instance bash
 # Executing SQL against a SQLite database.  This only works inside of the container:
 sqlite3 /var/lib/sqlite-data/my-api-app.db 'select * from tbl_quotes order by random() limit 1;'
 
+# Parsing JSON via bash and jq:
+echo \{\"message\":\"Success\",\"id\":1,\"text\":\"Diplomacy is the art of saying \'Nice doggie\' until you can find a rock.\",\"author\"\:\"Will Rogers\"\} | jq -r '.id'
+
 # Copy files out of a container:
 podman cp my-api-demo-instance:/var/www/html/make-access-token.php html/make-access-token.php 
 podman cp my-api-demo-instance:/var/www/html/api/index.php html/api/index.php
