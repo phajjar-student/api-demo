@@ -125,7 +125,7 @@ class Quotes extends OutputJSON
 				$sql1->execute([":quote_text" => $quoteText, ":quote_author" => $quoteAuthor, ":quote_year" => $quoteYear]);
 
 				$insertID = $this->conn->lastInsertId();
-				$this->InitIfNeeded (200, array ("message" => "Success", "id", $insertID));
+				$this->InitIfNeeded (200, array ("message" => "Success", "id" => $insertID));
 				$this->OutJSON();
 			}
 			else
@@ -166,6 +166,13 @@ class Quotes extends OutputJSON
 		{
 			throw new Exception ("400|A record ID must be specified in order to perform a delete.");
 		}
+		if (!$this->RecordExists($id))
+			throw new Exception ("400|No quote with that ID exists.  Nothing to delete.");
+
+		$sql4 = $this->conn->prepare("delete from tbl_quotes where rcdid=:inRcdid");
+		$sql4->execute([":inRcdid" => $id]);
+		$this->InitIfNeeded(200, array ("message" => "Successfully deleted record.", $id => $id));
+		$this->OutJSON();
 	}
 
 	function UpdateQuote ()
@@ -177,7 +184,7 @@ class Quotes extends OutputJSON
 			throw new Exception ("400|A record ID must be specified in order to perform an update.");
 		}
 		if (!$this->RecordExists($id))
-			throw new Exception ("400|No quote with that ID exists.");
+			throw new Exception ("400|No quote with that ID exists.  Nothing to update.");
 		// Update based on values specified.
 		$sql3 = "";
 		$whatWasUpdated = "";

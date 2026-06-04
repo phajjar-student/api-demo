@@ -77,7 +77,7 @@ OUTPUT=`curl $VERBOSE -G -d 'id=999999999999' --request GET --url "$URL/$ACTION"
 printf "\nGET Method - Output is:\n$OUTPUT\n$LINE\n"
 
 # Insert a misquote and then update it.
-printf "POST - Create a new quote:\n"
+printf "POST - Create a misquote:\n"
 OUTPUT=`curl $VERBOSE -d 'quote_text=If%20it%27s%20on%20the%20Internet%20then%20it%20must%20be%20true%21&quote_author=George%20Washington' --request POST \
     --url "$URL/$ACTION" \
     --header "authorization: Bearer $API_KEY"`
@@ -87,26 +87,31 @@ printf "\nPOST Method - Output is:\n$OUTPUT\n$LINE\n"
 
 printf "PATCH - Update a quote:\n"
 OUTPUT=`curl --request PATCH \
-    --url "$URL/$ACTION?id=3&quote_author=Abraham%20Lincoln&quote_text=The%20best%20way%20to%20destroy%20an%20enemy%20is%20to%20make%20him%20a%20friend." \
+    --url "$URL/$ACTION?id=$QUOTE_ID&quote_author=Abraham%20Lincoln&quote_text=The%20best%20way%20to%20destroy%20an%20enemy%20is%20to%20make%20him%20a%20friend." \
     --header "authorization: Bearer $API_KEY"`
 printf "\nPATCH Method - Output is:\n$OUTPUT\n$LINE\n"
 
-# Get Updated Quote:
+ Get Updated Quote:
 printf "GET - Re-Read updated quote:\n"
-OUTPUT=`curl $VERBOSE -G -d 'id=3' --request GET --url "$URL/$ACTION" \
+OUTPUT=`curl $VERBOSE -G -d "id=$QUOTE_ID" --request GET --url "$URL/$ACTION" \
     --header "aUthorization: Bearer $API_KEY"`
 printf "\nGET Method - Output is:\n$OUTPUT\n$LINE\n"
 
+# PUT isn't supported, but PATCH can do the same thing.
 #printf "PUT:\n"
 #OUTPUT=`curl -d 'key1=val1&key2=val2&key3=val3' --request PUT \
 #    --url "$URL/$ACTION" \
 #    --header "Authorization: Bearer $API_KEY"`
 #printf "\nPUT Method - Output is:\n$OUTPUT\n$LINE\n"
 
-#printf "DELETE:\n"
-#OUTPUT=`curl --request DELETE \
-#    --url "$URL/$ACTION?id=3" \
-#    --header "AuthorizatioN: Bearer $API_KEY"`
-#printf "\nDELETE Method - Output is:\n$OUTPUT\n$LINE\n"
+printf "DELETE:\n"
+OUTPUT=`curl --request DELETE \
+    --url "$URL/$ACTION?id=$QUOTE_ID" \
+    --header "AuthorizatioN: Bearer $API_KEY"`
+printf "\nDELETE Method - Output is:\n$OUTPUT\n$LINE\n"
 
-
+# Try to get Deleted Quote:
+printf "GET - Re-Read deleted quote:\n"
+OUTPUT=`curl $VERBOSE -G -d "id=$QUOTE_ID" --request GET --url "$URL/$ACTION" \
+    --header "aUthorization: Bearer $API_KEY"`
+printf "\nGET Method - Output is:\n$OUTPUT\n$LINE\n"
