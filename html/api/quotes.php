@@ -120,8 +120,9 @@ class Quotes extends OutputJSON
 		$id = -1;
 		if (isset ($_GET["id"]))
 		{
+			
 			// Is this a non-negative integer?
-			if (!is_int($_GET["id"]))
+			if (!$this->IsInteger($_GET["id"]))
 				throw new Exception ("400|If an id is specified it must be a " .
 					"non-negative integer.");
 			$possibleId = (int) $_GET["id"];
@@ -129,19 +130,66 @@ class Quotes extends OutputJSON
 				throw new Exception ("400|An integer id was specified but it " .
 					"was non-negative.");
 			$id = $possibleId;
+			
 		}
 		$fetchedQuote = "";
 		$fetchedAuthor = "";
+		$fetchedID = -1;
 		if (-1 == $id)
 		{
-			$sql0 = $this->conn->query("select * from tbl_quotes order by " .
-				"random() limit 1;");
-			$rowCount = $sql0->fetchColumn();
-			if ($rowCount < 1)
-				throw new Exception ("500|There are no quotes in the database.");
-			$row0 = $sql0->fetch();
-			$fetchedQuote = $row0["quote_text"];
-			$fetchedAuthor = $row0["quote_author"];
+			try
+				{
+					$sql0 = $this->conn->query("select * from tbl_quotes order by " .
+						"random() limit 1;");
+					// You can't get the rowcount before retrieving the data in SQLite/PDO.
+					//$rowCount = $sql0->fetchColumn();
+					//if ($rowCount < 1)
+					//	throw new Exception ("500|There are no quotes in the database.");
+					$row0 = $sql0->fetch();
+					$fetchedQuote = $row0["quote_text"];
+					$fetchedAuthor = $row0["quote_author"];
+					$fetchedID = $row0["rcdid"];
+					$this->InitIfNeeded (200, array ("message" => "Success", 
+						"id" => $fetchedID, "text" => $fetchedQuote, 
+						"author" => $fetchedAuthor));
+					$this->OutJSON();
+				}
+			catch (Exception $ex)
+				{
+					throw new Exception ("500|Random GET failed due to error [" . $ex->getMessage() . "]");
+				}
+		}
+		else
+		{
+			try
+			{
+				// SQLite will return a false value for the query object if the index doesn't
+				// exist.  For now, I will count the number of records with the matching index
+				// to see if its here.  Normally I wouldn't need to do this, but I can't do a
+				// rowcount on a valid object without nulling out the retrieved data.
+
+				$sql2 = $this->conn->prepare("select count(*) as 'recordCount' from tbl_quotes where rcdid=:inRcdid");
+				$sql2->execute([":inRcdid" => $id]);
+				$row2 = $sql2->fetch();
+				$recordCount = (int)$row2["recordCount"];
+				if (0 == $recordCount)
+					throw new Exception ("No quote with that id exists.");
+
+				$sql1 = $this->conn->prepare("select * from tbl_quotes where rcdid=:inRcdid");
+				$sql1->execute([":inRcdid" => $id]);
+				$row1 = $sql1->fetch();
+				$fetchedQuote = $row1["quote_text"];
+				$fetchedAuthor = $row1["quote_author"];
+				$fetchedID = $id;
+				$this->InitIfNeeded (200, array ("message" => "Success",
+					"id" => $fetchedID, "text" => $fetchedQuote,
+					"author" => $fetchedAuthor));
+				$this->OutJSON();
+			}
+			catch (Exception $ex)
+			{
+				throw new Exception ("500|Specific index GET failed due to error [" . $ex->getMessage() . "]");
+			}
 		}
 	}
 }

@@ -151,6 +151,35 @@ class OutputJSON
 			$this->InitIfNeeded ($inOutStatus, $inResponseComponents);
 	}
 
+	function IsInteger ($inString)
+	{
+		// So why use such an ancient and kludgy approach to data validation?
+		// The reason is because functions like is_int expect an integer as
+		// an argument, which is kinda useless.  The functions int and intval
+		// are supposed to cast anything that isn't an integer into a 0 or 1,
+		// but that can vary based on what the original data is.  I don't want
+		// to take a chance with an unknown data type coming in, so I want to
+		// limit the scope of input as much as possible.
+
+		// So why not a regular expression?  I'm lazy.  I've used this code
+		// for forever and it's bulletproof, so I am sticking with it.
+
+		$strLength = strlen ($inString);
+		$x = 0;
+		while ($x < $strLength)
+		{
+			$ch = substr ($inString, $x, 1);
+			if ( ( (0 == $x) && ('-' == $ch ) ) ||('0' == $ch) || ('1' == $ch) || ('2' == $ch) || ('3' == $ch) || ('4' == $ch) || ('5' == $ch) || ('6' == $ch) || ('7' == $ch) || ('8' == $ch) || ('9' == $ch) )
+			{
+				// Do nothing.
+			}
+			else
+				return false;
+			$x++;
+		}
+		return true;
+	}
+
 	function DeliverErrorMessageWithHTTPCode ($inMessage)
 	{
 		// For use with error messages that include an HTTP code, a bar, and a message.

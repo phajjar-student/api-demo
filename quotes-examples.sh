@@ -35,12 +35,6 @@ OUTPUT=`curl -v -d 'quote_author=Nobody&quote_text=Lorem%20ipsum%20dolor%20sit%2
     --header "Authorization: Bearer $API_KEY"`
 printf "\nPOST Method - Output is:\n$OUTPUT\n\n"
 
-# Specific Quote
-printf "GET:\n"
-OUTPUT=`curl -v -G -d 'id=1' --request GET --url "$URL/$ACTION" \
-    --header "aUthorization: Bearer $API_KEY"`
-printf "\nGET Method - Output is:\n$OUTPUT\n\n"
-
 # Non-integer ID
 printf "GET:\n"
 OUTPUT=`curl -v -G -d 'id=abc' --request GET --url "$URL/$ACTION" \
@@ -59,6 +53,18 @@ printf "GET:\n"
 OUTPUT=`curl -v --request GET \
     --url "$URL/$ACTION" \
     --header "Authorization: Bearer $API_KEY"`
+printf "\nGET Method - Output is:\n$OUTPUT\n\n"
+
+# Specific Quote
+printf "GET:\n"
+OUTPUT=`curl -v -G -d 'id=1' --request GET --url "$URL/$ACTION" \
+    --header "aUthorization: Bearer $API_KEY"`
+printf "\nGET Method - Output is:\n$OUTPUT\n\n"
+
+# Non-existenxt quote
+printf "GET:\n"
+OUTPUT=`curl -v -G -d 'id=999999999999' --request GET --url "$URL/$ACTION" \
+    --header "aUthorization: Bearer $API_KEY"`
 printf "\nGET Method - Output is:\n$OUTPUT\n\n"
 
 #printf "PUT:\n"
