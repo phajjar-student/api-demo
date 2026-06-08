@@ -91,7 +91,7 @@ OUTPUT=`curl --request PATCH \
     --header "authorization: Bearer $API_KEY"`
 printf "\nPATCH Method - Output is:\n$OUTPUT\n$LINE\n"
 
- Get Updated Quote:
+# Get Updated Quote:
 printf "GET - Re-Read updated quote:\n"
 OUTPUT=`curl $VERBOSE -G -d "id=$QUOTE_ID" --request GET --url "$URL/$ACTION" \
     --header "aUthorization: Bearer $API_KEY"`
