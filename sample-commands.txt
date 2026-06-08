@@ -8,11 +8,14 @@ podman run --detach --name my-api-demo-instance --publish 60080:80 --log-driver=
 # Stop the Container:
 podman stop my-api-demo-instance; podman rm my-api-demo-instance
 
-# Enter a running container:
+# Enter a running container, use the exit command to exit the container:
 podman exec -it my-api-demo-instance bash
 
 # Executing SQL against a SQLite database.  This only works inside of the container:
 sqlite3 /var/lib/sqlite-data/my-api-app.db 'select * from tbl_quotes order by random() limit 1;'
+
+# Getting output as JSON.  This also only works inside of the container:
+sqlite3 /var/lib/sqlite-data/my-api-app.db "select json_group_array (json_object('rcdid', rcdid, 'quote_author', quote_author, 'quote_text', quote_text)) from tbl_quotes;"
 
 # Parsing JSON via bash and jq:
 echo \{\"message\":\"Success\",\"id\":1,\"text\":\"Diplomacy is the art of saying \'Nice doggie\' until you can find a rock.\",\"author\"\:\"Will Rogers\"\} | jq -r '.id'

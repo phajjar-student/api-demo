@@ -12,8 +12,8 @@ fi
 API_KEY=$(cat api-key.txt)
 
 # Toggle verbosity
-#VERBOSE=-v
-VERBOSE=
+VERBOSE=-v
+#VERBOSE=
 
 # An easy way to display a line.  Yes, the 2 backslashes are not a typo.
 LINE=________________________________________________________________________________\\n
@@ -114,4 +114,10 @@ printf "\nDELETE Method - Output is:\n$OUTPUT\n$LINE\n"
 printf "GET - Re-Read deleted quote:\n"
 OUTPUT=`curl $VERBOSE -G -d "id=$QUOTE_ID" --request GET --url "$URL/$ACTION" \
     --header "aUthorization: Bearer $API_KEY"`
+printf "\nGET Method - Output is:\n$OUTPUT\n$LINE\n"
+
+# List all stored quotes
+printf "GET - List all stored quotes:\n"
+OUTPUT=`curl $VERBOSE -G -d "listall=listall" --request GET --url "$URL/$ACTION" \
+    --header "AuthoriZation: Bearer $API_KEY"`
 printf "\nGET Method - Output is:\n$OUTPUT\n$LINE\n"
