@@ -35,9 +35,6 @@ EOF
 # Make sure that the web process can read the secrets directory.
 RUN chown -R www-data:www-data /var/lib/secrets
 
-# Copy optional vi configuration:
-COPY vimrc.local /etc/vim
-
 # Create the API endpoint directory and grant ownership to web process user if not already done.
 RUN mkdir /var/www/html/api
 COPY html/api/* /var/www/html/api
