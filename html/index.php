@@ -15,6 +15,7 @@
 <ul>
 	<li><a href='make-access-token.php'>Make an Access Token</a></li>
 	<li><a href='db-conn-test.php'>Test Database Connectivity</a></li>
+	<li><a href='phpinfo.php'>PHP Information (never expose this in a Production environment)</a></li>
 </ul>
 </main>
 </body>
