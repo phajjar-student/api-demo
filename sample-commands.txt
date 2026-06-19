@@ -17,6 +17,13 @@ podman ps
 # Executing SQL against a SQLite database.  This only works inside of the container:
 sqlite3 /var/lib/sqlite-data/my-api-app.db 'select * from tbl_quotes order by random() limit 1;'
 
+# Listing all quotes.  This only works inside of the container:
+sqlite3 /var/lib/sqlite-data/my-api-app.db 'select * from tbl_quotes;'
+
+# Deleting a quote by its ID.  This only works inside of the container.  It might help you with dealing with duplicate entries:
+# You can get the id from the above select query.
+sqlite3 /var/lib/sqlite-data/my-api-app.db 'delete from tbl_quotes where rcdid=8;'
+
 # Getting output as JSON.  This also only works inside of the container:
 sqlite3 /var/lib/sqlite-data/my-api-app.db "select json_group_array (json_object('rcdid', rcdid, 'quote_author', quote_author, 'quote_text', quote_text)) from tbl_quotes;"
 
