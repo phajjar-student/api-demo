@@ -3,3 +3,6 @@ api-key.txt
 
 # No temporary files:
 *.swp
+
+# No Project Files:
+quotes-project.sh
