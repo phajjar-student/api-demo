@@ -115,10 +115,7 @@ class Quotes extends OutputJSON
 		try
 		{
 			// Is the quote already in the database?  If yes throw an exception.
-			$sql2 = $this->conn->prepare("select count(*) as 'recordCount' from " .
-				"tbl_quotes where lower(quote_text)=lower(:possible_quote_text);");
-			$sql2->execute([":possible_quote_text" => $quoteText]);
-			$recordCount = (int) $sql2->fetchColumn();
+			$recordCount = $this->GetQuoteEntryCount($quoteText);
 			if (0 == $recordCount)
 			{
 				$sql1 = $this->conn->prepare("insert into tbl_quotes (quote_text, quote_author, quote_year) values (:quote_text, :quote_author, :quote_year);");
@@ -136,6 +133,16 @@ class Quotes extends OutputJSON
 			throw new Exception ("500|Failed due to error [" . $ex->getMessage() . "]");
 		}
 
+	}
+
+	function GetQuoteEntryCount ($possibleQuoteText)
+	{
+		$recordCount = 0;
+		$sql2 = $this->conn->prepare("select count(*) as 'recordCount' from " .
+			"tbl_quotes where lower(quote_text)=lower(:possible_quote_text);");
+		$sql2->execute([":possible_quote_text" => trim($possibleQuoteText)]);
+		$recordCount = (int) $sql2->fetchColumn();
+		return $recordCount;
 	}
 
 	function ReturnIDIfPossible()
@@ -191,12 +198,15 @@ class Quotes extends OutputJSON
 		if (isset ($_GET["quote_text"]))
 		{
 			// Is the quote too long?
-			if (strlen ($_GET["quote_text"]) > $this->maxQuoteLength)
+			if (strlen (trim($_GET["quote_text"])) > $this->maxQuoteLength)
 				throw new Exception ("431|Replacement quote is too long.");
+			// Does the replacement quote exist in the database?
+			if (0 != $this->GetQuoteEntryCount(trim($_GET["quote_text"])))
+				throw new Exception ("412|Replacement quote already exists in database.");
 			// The more complex this table gets, the more likely you should have to create a stored procedure
 			// or build the query into a single statement.
 			$sql3 = $this->conn->prepare("update tbl_quotes set quote_text=:inQuoteText where rcdid=:inRcdid;");
-			$sql3->execute([":inQuoteText" => $_GET["quote_text"], ":inRcdid" => $id]);
+			$sql3->execute([":inQuoteText" => trim($_GET["quote_text"]), ":inRcdid" => $id]);
 			$whatWasUpdated = "quote text";
 		}
 
