@@ -5,4 +5,4 @@ api-key.txt
 *.swp
 
 # No Project Files:
-quotes-project.sh
+quotes-project*.sh
