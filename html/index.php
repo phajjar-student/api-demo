@@ -11,6 +11,11 @@
         <h1>There's Nothing to See Here</h1>
 </header>
 <main>
+<p>You might be looking for the following pages:</p>
+<ul>
+	<li><a href='make-access-token.php'>Make an Access Token</a></li>
+	<li><a href='db-conn-test.php'>Test Database Connectivity</a></li>
+</ul>
 </main>
 </body>
 </html>

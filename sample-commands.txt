@@ -5,11 +5,14 @@ podman build -t php-api-demo .
 podman run --detach --name my-api-demo-instance --publish 60080:80 --log-driver=journald php-api-demo
 # You must use the same name of the container in both commands
 
-# Stop the Container:
+# Stop the Container (note there are 2 commands here):
 podman stop my-api-demo-instance; podman rm my-api-demo-instance
 
 # Enter a running container, use the exit command to exit the container:
 podman exec -it my-api-demo-instance bash
+
+# Detect running containers:
+podman ps
 
 # Executing SQL against a SQLite database.  This only works inside of the container:
 sqlite3 /var/lib/sqlite-data/my-api-app.db 'select * from tbl_quotes order by random() limit 1;'
