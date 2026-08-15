@@ -6,3 +6,6 @@ api-key.txt
 
 # No Project Files:
 quotes-project*.sh
+
+# No outputs that I created:
+*-quotes.txt
