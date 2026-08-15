@@ -65,6 +65,6 @@ jobs:
         run: |
           cat api-key.txt
 
-      - name: Run the quotes-example.sh file.
+      - name: Run the quotes-example.sh file.  This muse have a 0 exit value or the workflow fails.
         run: |
-          bash quotes-example.sh
+          bash ./quotes-example.sh
