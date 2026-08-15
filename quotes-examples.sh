@@ -12,8 +12,8 @@ fi
 # Or, read it from a file.
 API_KEY=$(cat api-key.txt)
 
-# Toggle verbosity
-VERBOSE=-v
+# Toggle verbosity.  Put -v if you want verbose.  Leave blank otherwise
+VERBOSE=
 
 # An easy way to display a line.  Yes, the 2 backslashes are not a typo.
 LINE=________________________________________________________________________________\\n
@@ -121,3 +121,5 @@ printf "GET - List all stored quotes:\n"
 OUTPUT=`curl $VERBOSE -G -d "listall=listall" --request GET --url "$URL/$ACTION" \
     --header "AuthoriZation: Bearer $API_KEY"`
 printf "\nGET Method - Output is:\n$OUTPUT\n$LINE\n"
+
+exit 0
