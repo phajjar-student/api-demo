@@ -40,6 +40,15 @@ jobs:
         run: |
           docker run -d -p 8080:80 --name api-demo api-demo
 
+      - name: Add required hostname mapping.  Note that we want to show the output as well as update the hosts file.
+        run: |
+          echo "127.0.0.1 my-api-demo" | sudo tee -a /etc/hosts
+
+      - name: Verify hostname mapping
+        run: |
+          getent hosts my-api-demo
+          ping -c 1 my-api-demo
+
       - name: Browse API Default Page
         run: |
           curl --fail http://my-api-demo:8080/index.php
