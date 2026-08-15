@@ -1,0 +1,45 @@
+# This is a basic CI (Continuous Integration) workflow file that will perform
+# basic testing on the PHP and Dockerfile code that gets updated here.
+
+# Note that extra steps would be needed to test the bash and PowerShell code.
+
+# Tabs are not allowed in yaml.
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+        # Right now, this rule applies only to the main branch.
+  pull_request:
+    # Nothing for pull requests (merging changes others have made)
+
+jobs:
+  validate:
+    # Required testing environment.  Also known as a "build runner."
+      runs-on: ubuntu-latest
+
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4 # Copies code into the "ubuntu-latest" testing environment.
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2 # A specialized PHP testing environment.
+      with:
+        php-version: '8.3'
+
+    - name: Check PHP Syntax
+      run: |
+        find . -name "*.php" -exec php -l {} \;
+
+    - name: Build Container
+      run: |
+        docker build -t api-demo .
+
+    - name: Start Container
+      run: |
+        docker run -d -p 8080:80 --name api-demo api-demo
+
+    - name: Browse API Default Page
+      run: |
+        curl --fail http://localhost:8080/
