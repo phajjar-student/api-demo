@@ -69,7 +69,7 @@ jobs:
         run: |
           ls -al
 
-#      - name: Run the quotes-example.sh file.  This muse have a 0 exit value or the workflow fails.
-#        run: |
-#          bash ./quotes-example.sh
+      - name: Run the quotes-example.sh file.  This muse have a 0 exit value or the workflow fails.
+        run: |
+          chmod +x ./quotes-example.sh; ./quotes-example.sh
 
