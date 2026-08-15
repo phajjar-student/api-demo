@@ -42,4 +42,4 @@ jobs:
 
       - name: Browse API Default Page
         run: |
-          curl --fail http://localhost:8080/index.php
+          curl --fail http://my-api-demo:8080/index.php
