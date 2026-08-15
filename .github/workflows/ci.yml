@@ -41,7 +41,7 @@ jobs:
 
       - name: Start Container
         run: |
-          docker run -d -p 8080:80 --name api-demo api-demo
+          docker run -d -p 60080:80 --name api-demo api-demo
 
       - name: Add required hostname mapping.  Note that we want to show the output as well as update the hosts file.
         run: |
@@ -54,12 +54,12 @@ jobs:
 
       - name: Browse API Default Page
         run: |
-          curl --fail http://my-api-demo:8080/index.php
+          curl --fail http://my-api-demo:60080/index.php
 
       # Note that the quotes-examples.php file includes the file api-key.txt, so it should be able to run successfully here.
       - name: Generate API Key and Save to File
         run: |
-          curl -f -X POST --data "Submitting=1&keyOnly=1" http://my-api-demo:8080/make-access-token.php > api-key.txt
+          curl -f -X POST --data "Submitting=1&keyOnly=1" http://my-api-demo:60080/make-access-token.php > api-key.txt
 
       - name: Display the Generated API Key
         run: |
