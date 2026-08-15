@@ -1,0 +1,20 @@
+
+<script>
+        function Confirm ()
+        {
+                if (confirm ("Are you sure you want to do this?\n\t* This cannot be undone.\n\t* You will need to update all of your applications to use the new key.\n"))
+                {
+                        document.forms[0].Submitting.value='1';
+                        return true;
+                }
+                return false;
+        }
+</script>
+<form method='post' name='mainForm' action="<?php echo $_SERVER['PHP_SELF'];?>" onsubmit='return Confirm();'>
+<input type='hidden' name='Submitting' value='0'>
+<input type='submit' value='Create New Access Token' >
+</form>
+</main>
+</body>
+</html>
+

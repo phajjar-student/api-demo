@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width-device-width, initial-scale=1.0'>
+        <title>Make An Access Token</title>
+        <meta name='description' content='Create a new access token'>
+</head>
+<body>
+<header>
+        <h1>Create a New Access Key</h1>
+</header>
+<main>
+<p>You'd never put this in a directory that is browseable, like this one, in a publically-accessible application.</p>
+<h2>Note that if you press "Create New Access Token" below, you will need to update your access token with this value in every API-enabled app which connects to this system.</h2>
+<p>API Keys are not stored in readable format in the database.  You must copy this API key after it is created.</p>
