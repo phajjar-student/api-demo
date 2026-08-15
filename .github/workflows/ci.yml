@@ -14,6 +14,9 @@ on:
   pull_request:
     # Nothing for pull requests (merging changes others have made)
 
+  workflow_dispatch:
+    # Used for manually executing CI.
+
 jobs:
   validate:
     # Required testing environment.  Also known as a "build runner."
