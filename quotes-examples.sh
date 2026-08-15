@@ -9,11 +9,11 @@ fi
 
 # Copy-Paste your API Key below:
 #API_KEY=Test
+# Or, read it from a file.
 API_KEY=$(cat api-key.txt)
 
 # Toggle verbosity
 VERBOSE=-v
-#VERBOSE=
 
 # An easy way to display a line.  Yes, the 2 backslashes are not a typo.
 LINE=________________________________________________________________________________\\n
