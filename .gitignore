@@ -9,3 +9,6 @@ quotes-project*.sh
 
 # No outputs that I created:
 *-quotes.txt
+
+# No response.txt just in case that's not deleted.
+response.txt

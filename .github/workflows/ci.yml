@@ -69,7 +69,8 @@ jobs:
         run: |
           ls -al
 
-      - name: Run the quotes-examples.sh file.  This muse have a 0 exit value or the workflow fails.
+      # quotes-validate.sh tests essentially the same thing as quotes-examples.sh, but it's geared more for CI.
+      - name: Run the quotes-validate.sh file.  This muse have a 0 exit value or the workflow fails.
         run: |
-          chmod +x ./quotes-examples.sh; ./quotes-examples.sh
+          chmod +x ./quotes-validate.sh; ./quotes-validate.sh
 

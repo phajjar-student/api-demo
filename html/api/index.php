@@ -132,7 +132,7 @@ function ProcessMethod ($conn, $method, $authHeader, $path, $rawBody, $reporting
 			throw new Exception ("You are not authorized!  Go away!");
 	}
 	else
-		DeliverResponse (200, array("message" => "No Database Configured.", "method" => $method, "API Key" => $authHeader, "Path" => $path, "Raw Body" => $rawBody, "Database Status" => $reportingStatus));
+		DeliverResponse (503, array("message" => "No Database Configured.", "method" => $method, "API Key" => $authHeader, "Path" => $path, "Raw Body" => $rawBody, "Database Status" => $reportingStatus));
 	return 0;
 }
 
