@@ -33,3 +33,9 @@ echo \{\"message\":\"Success\",\"id\":1,\"text\":\"Diplomacy is the art of sayin
 # Copy files out of a container:
 podman cp my-api-demo-instance:/var/www/html/make-access-token.php html/make-access-token.php 
 podman cp my-api-demo-instance:/var/www/html/api/index.php html/api/index.php
+
+# Generate an API token interactively:
+curl -f -X POST --data "Submitting=1" http://my-api-demo:60080/make-access-token.php
+
+# Generate an API token non-interactively:
+curl -f -X POST --data "Submitting=1&keyOnly=1" http://my-api-demo:60080/make-access-token.php

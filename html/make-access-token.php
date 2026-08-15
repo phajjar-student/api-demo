@@ -1,21 +1,12 @@
-<!DOCTYPE html>
-<html lang='en'>
-<head>
-	<meta charset='UTF-8'>
-	<meta name='viewport' content='width-device-width, initial-scale=1.0'>
-	<title>Make An Access Token</title>
-	<meta name='description' content='Create a new access token'>
-</head>
-<body>
-<header>
-	<h1>Create a New Access Key</h1>
-</header>
-<main>
-<p>You'd never put this in a directory that is browseable, like this one, in a publically-accessible application.</p>
-<h2>Note that if you press "Create New Access Token" below, you will need to update your access token with this value in every API-enabled app which connects to this system.</h2>
-<p>API Keys are not stored in readable format in the database.  You must copy this API key after it is created.</p>
 <?php
 // make-access-token.php
+
+$displayKeyOnly = False;
+if (isset ($_POST["keyOnly"]) && ("1" == $_POST["keyOnly"]))
+	$displayKeyOnly = True;
+if (!$displayKeyOnly)
+	require_once ("make-access-token-top.txt");
+
 if (!defined ('INSIDE_APPLICATION'))
 define ('INSIDE_APPLICATION', true);
 
@@ -37,7 +28,7 @@ try
 		if (isset ($_POST["Submitting"]) && ("1" == $_POST["Submitting"]))
 		{
 			// Submitting...
-			PrepareDatabase ($conn);
+			PrepareDatabase ($conn, $displayKeyOnly);
 		}
 		else
 			PrintNonSubmitMsg($requiredTableExists);
@@ -48,9 +39,10 @@ catch (Exception $ex)
 		print "<h3 class='error'>Connection failed due to error [" . $ex->getMessage() . "]</h3>";
 	}
 
-function PrepareDatabase ($conn)
+function PrepareDatabase ($conn, $displayKeyOnly)
 {
-	print "<p>Need to prepare database.</p>";
+	if (!$displayKeyOnly)
+		print "<p>Need to prepare database.</p>";
 	$conn->exec("PRAGMA foreign_keys = ON");
 
 	// There isn't a need to check if this table exists before we execute this
@@ -74,7 +66,8 @@ function PrepareDatabase ($conn)
 	$recordCount = (int) $sql2->fetchColumn();
 	if (0 == $recordCount)
 	{
-		print "No salt column.<br/>";
+		if (!$displayKeyOnly)
+			print "No salt column.<br/>";
 		$proposedSalt = GenerateRandomString();
 //		print "Proposed salt is [" . htmlspecialchars($proposedSalt) ."]<br/>";
 		$sql3 = $conn->prepare("insert into " . MAJOR_STRINGS_TABLE . " (string_key, string_value) values (:string_key, :string_value);");
@@ -96,7 +89,10 @@ function PrepareDatabase ($conn)
 	$sql5 = $conn->prepare("insert into " . MAJOR_STRINGS_TABLE . " (string_key, string_value) values (:string_key, :string_value);");
 	$sql5->execute([":string_key" => HASHED_API_KEY_COLUMN, ":string_value" => $hashedCombo]);
 
-	print "<label for='apiKey'><h2>Below is your API key.  Copy it and store it in your code.  Once you navigate away from here you won't see it again. </h2></label>\n<pre id='apiKey' tabindex='0'>" . htmlspecialchars($proposedAPIKey) ."</pre>\n";
+	if (!$displayKeyOnly)
+		print "<label for='apiKey'><h2>Below is your API key.  Copy it and store it in your code.  Once you navigate away from here you won't see it again. </h2></label>\n<pre id='apiKey' tabindex='0'>" . htmlspecialchars($proposedAPIKey) ."</pre>\n";
+	else
+		print htmlspecialchars($proposedAPIKey);
 }
 
 function PrintNonSubmitMsg ($requiredTableExists)
@@ -112,24 +108,6 @@ function PrintNonSubmitMsg ($requiredTableExists)
 	}
 }
 
-
+if (!$displayKeyOnly)
+	require_once ("make-access-token-bottom.txt");
 ?>
-
-<script>
-	function Confirm ()
-	{
-		if (confirm ("Are you sure you want to do this?\n\t* This cannot be undone.\n\t* You will need to update all of your applications to use the new key.\n"))
-		{
-			document.forms[0].Submitting.value='1';
-			return true;
-		}
-		return false;
-	}
-</script>
-<form method='post' name='mainForm' action="<?php echo $_SERVER['PHP_SELF'];?>" onsubmit='return Confirm();'>
-<input type='hidden' name='Submitting' value='0'>
-<input type='submit' value='Create New Access Token' >
-</form>
-</main>
-</body>
-</html>

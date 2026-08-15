@@ -46,6 +46,8 @@ WORKDIR /var/www/html
 COPY html/db-conn-test.php .
 COPY html/index.php .
 COPY html/make-access-token.php .
+COPY html/make-access-token-top.txt .
+COPY html/make-access-token-bottom.txt .
 COPY html/phpinfo.php .
 COPY html/sh-common-noauth.php .
 # The below command will recurisvely change ownership for everything in webroot, including the api directory.
