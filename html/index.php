@@ -23,5 +23,4 @@
 <?php
 // This file only exists so that we don't get an error when browsing to the webroot.
 
-require ("this-file-does-not-exist.php")
 ?>
