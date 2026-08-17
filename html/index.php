@@ -23,5 +23,5 @@
 <?php
 // This file only exists so that we don't get an error when browsing to the webroot.
 
-Why can't this be in Python!
+print 1/0
 ?>
