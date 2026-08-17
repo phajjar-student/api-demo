@@ -35,6 +35,10 @@ jobs:
         run: |
           find . -name "*.php" -exec php -l {} \;
 
+      - name: Let's divide by zero!
+        run: |
+          expr 1 / 0   # Unlike bc, this should return a non-zero exit code because this is bad math.
+
       - name: Build Container
         run: |
           docker build -t api-demo .
